@@ -1,14 +1,21 @@
+const express = require('express');
 const mongo = require('mongodb').MongoClient;
-const client = require('socket.io').listen(4000).sockets;
+const socketio = require('socket.io');
+const app = express();
+
+const server = app.listen(8000, () => {
+  console.log("The server is listerning on the port 8000 ..");
+})
+
+const io = socketio(server);
 
 mongo.connect('mongodb+srv://Zharif:1q2w3e4rMz@clusterzer0-pthxk.mongodb.net/chatroom', function(err, db) {
   if (err) {
     throw err;
   }
-  console.log('MongoDB connected ..');
-
+  // console.log('Mongodb connected ..');
   // Connect to Socket.io
-  client.on('connection', function(socket) {
+  io.on('connection', function(socket) {
     let chat = db.db('chatroom').collection('chats');
 
     sendStatus = function(s) {
@@ -37,7 +44,7 @@ mongo.connect('mongodb+srv://Zharif:1q2w3e4rMz@clusterzer0-pthxk.mongodb.net/cha
           name: name,
           message: message
         }, function() {
-          client.emit('output', [data]);
+          io.emit('output', [data]);
 
           sendStatus({
             message: 'Message sent',
@@ -55,3 +62,5 @@ mongo.connect('mongodb+srv://Zharif:1q2w3e4rMz@clusterzer0-pthxk.mongodb.net/cha
     });
   });
 });
+
+app.use(express.static('public'));
