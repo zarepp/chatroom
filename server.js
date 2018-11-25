@@ -1,7 +1,7 @@
 const mongo = require('mongodb').MongoClient;
 const client = require('socket.io').listen(4000).sockets;
 
-mongo.connect('mongodb://127.0.0.1/chatroom', function(err, db) {
+mongo.connect('mongodb+srv://Zharif:1q2w3e4rMz@clusterzer0-pthxk.mongodb.net/chatroom', function(err, db) {
   if (err) {
     throw err;
   }
